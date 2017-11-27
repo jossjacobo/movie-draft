@@ -1,0 +1,21 @@
+{
+  "name": "movie-draft",
+  "version": "0.1.0",
+  "private": true,
+  "devDependencies": {
+    "concurrently": "3.0.0"
+  },
+  "dependencies": {
+    "react": "^16.1.1",
+    "react-dom": "^16.1.1",
+    "react-scripts": "1.0.17",
+    "history": "4.2.0",
+    "re-base": "2.2.0"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test --env=jsdom",
+    "eject": "react-scripts eject"
+  }
+}
