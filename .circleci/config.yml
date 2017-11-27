@@ -18,7 +18,7 @@ jobs:
       - run:
           name: tests
           command: |
-            - npm run test -- --coverage
+            - 'npm test -- --coverage'
       - store_artifacts:
             path: coverage
             destination: coverage
