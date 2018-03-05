@@ -1,18 +1,73 @@
-.app
-  text-align: center
-  .app-header
-    background-color: #222
-    height: 150px
-    padding: 20px
-    color: white
-  .app-logo
-    animation: rotate infinite 20s linear
-    height: 80px
-  .app-title
-    font-size: large
+// Import all partials
+@require './_*.styl'
+
+// Todo implement different screen size using @media
+// https://css-tricks.com/snippets/css/a-guide-to-flexbox/
+
+.main-nav-wrapper
+  background-color white
+  height 100px
+  box-shadow 0 0.1px 1.8px 0.1px #515151
+
+  .main-nav
+    color #222
+    max-width 1200px
+    margin 0 auto
+    display flex
+    align-items center
+    justify-content space-between
+.app-logo
+  animation rotate infinite 20s linear
+  height 80px
+.app-title
+  font-size large
+
+.round-image
+  width: 3.5em
+  height: 3.5em
+  background-color: #fff
+  border-radius: 50%
+  border 1px solid #eee
+  margin 1em
+
 
 @keyframes rotate
   from
-    transform: rotate(0deg)
+    transform rotate(0deg)
   to
-    transform: rotate(360deg)
+    transform rotate(360deg)
+
+ul.nav-login
+  list-style: none
+  margin 0
+  padding 0
+
+.dropdown
+  position: absolute
+  overflow: hidden
+  border-radius: 2px
+  transition: all 0.5s
+  margin 0 0 0 -1.75em
+  background: #fff
+  border-radius: 4px
+  box-shadow: 0 50px 100px rgba(50,50,93,.1), 0 15px 35px rgba(50,50,93,.15), 0 5px 15px rgba(0,0,0,.1)
+  transform-origin: 50% 0
+
+.hidden-overflow .dropdown
+  display none
+
+.login-button
+  background: black 
+  display: block
+  padding 1em
+  color: white
+
+.login-button[data-social="google"]
+  background: #DA5040	
+.login-button[data-social="github"]
+  background: #fff
+  color: black
+.login-button[data-social="twitter"]
+  background #019FE9
+.login-button[data-social="facebook"]
+  background: #3B5998

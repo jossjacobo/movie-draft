@@ -1,14 +1,59 @@
 import React, { Component } from 'react';
-import logo from '../css/images/logo.svg';
+import MainNav from './MainNav';
+import base from '../base';
 
 class App extends Component {
+
+  constructor() {
+    super();
+
+    this.userLoggedIn = this.userLoggedIn.bind(this);
+    this.userLoggedOut = this.userLoggedOut.bind(this);
+
+    // getInitialState
+    this.state = {
+      user: null
+    };
+  }
+
+  componentWillMount() {
+    base.onAuth((user) => {
+      if (user) {
+        this.userLoggedIn({user});
+      }
+    })
+  }
+
+  componentWillUnmount() {
+    // To do, remove binding
+  }
+
+  userLoggedIn(authData) {
+    var user = {
+      'uid': authData.user.uid,
+      'displayName': authData.user.displayName,
+      'email': authData.user.email,
+      'photoURL': authData.user.photoURL
+    }
+
+    this.setState({
+      user: user
+    });
+  }
+
+  userLoggedOut() {
+    base.unauth();
+    this.setState({ user: null });
+  }
+
   render() {
     return (
       <div className="app">
-        <header className="app-header">
-          <img src={logo} className="app-logo" alt="logo" />
-          <h1 className="app-title">Welcome to Movie Draft</h1>
-        </header>
+        <MainNav 
+          userLoggedIn={this.userLoggedIn}
+          userLoggedOut={this.userLoggedOut}
+          user={this.state.user}
+          />
         <p className="app-intro">
           To get started, edit <code>src/App.js</code> and save to reload.
         </p>
