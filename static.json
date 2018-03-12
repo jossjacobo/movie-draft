@@ -6,7 +6,7 @@
     },
     "proxies": {
         "/api/": {
-            "origin": "https://movie-draft-stage.herokuapp.com:8000"
+            "origin": "https://movie-draft-api.herokuapp.com/"
         }
     }
 }
