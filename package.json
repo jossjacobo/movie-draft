@@ -1,27 +1,32 @@
 {
-  "name": "movie-draft",
-  "version": "0.1.0",
+  "name": "movie-draft-api",
+  "version": "1.0.0",
+  "description": "Movie Draft Project (backend and frontend)",
   "private": true,
+  "author": "Jossay Jacobo",
+  "license": "ISC",
   "scripts": {
-    "start": "react-scripts start",
-    "styles": "stylus -u autoprefixer-stylus ./src/css/style.styl -o ./src/css/style.css",
-    "styles:watch": "stylus -u autoprefixer-stylus -w ./src/css/style.styl -o ./src/css/style.css",
-    "watch": "concurrently --name 'webpack, stylus' --prefix name 'npm run start' 'npm run styles:watch'",
-    "build": "react-scripts build",
-    "test": "react-scripts test --env=jsdom",
-    "eject": "react-scripts eject"
+    "start": "node ./bin/www",
+    "watch": "nodemon --inspect ./bin/www",
+    "watch-all": "concurrently --name 'express react stylus' --prefix name 'npm run watch' 'cd client/ && npm run start' 'cd client/ && npm run styles:watch'",
+    "heroku-postbuild": "cd client && npm install && npm run build"
   },
   "dependencies": {
+    "body-parser": "~1.18.2",
+    "cookie-parser": "~1.4.3",
+    "debug": "~2.6.9",
     "dotenv": "^5.0.1",
-    "history": "4.2.0",
-    "re-base": "2.2.0",
-    "react": "^16.1.1",
-    "react-dom": "^16.1.1",
-    "react-scripts": "1.0.17"
+    "express": "~4.15.5",
+    "jade": "~1.11.0",
+    "morgan": "~1.9.0",
+    "serve-favicon": "~2.4.5",
+    "mongodb": "^3.0.4"
   },
   "devDependencies": {
-    "autoprefixer-stylus": "0.10.0",
-    "concurrently": "3.0.0",
-    "stylus": "0.54.5"
+    "nodemon": "^1.17.1",
+    "concurrently": "3.0.0"
+  },
+  "engines": {
+    "node": "8.9.4"
   }
 }

@@ -12,20 +12,36 @@ class App extends Component {
 
     // getInitialState
     this.state = {
-      user: null
+      user: null,
+      notes: null
     };
   }
 
   componentWillMount() {
     base.onAuth((user) => {
       if (user) {
-        this.userLoggedIn({user});
+        this.userLoggedIn({ user });
       }
     })
   }
 
   componentWillUnmount() {
     // To do, remove binding
+  }
+
+  componentDidMount() {
+    // Sample fetch for the proxied api at http://localhost:3001
+    fetch('/api/notes')
+      .then((res, err) => {
+        if (err) {
+          console.log(err);
+          return;
+        }
+        return res.status === 200 && res.json();
+      })
+      .then(notes => {
+        this.setState({ ...this.state, notes });
+      });
   }
 
   userLoggedIn(authData) {
@@ -49,14 +65,24 @@ class App extends Component {
   render() {
     return (
       <div className="app">
-        <MainNav 
+        <MainNav
           userLoggedIn={this.userLoggedIn}
           userLoggedOut={this.userLoggedOut}
           user={this.state.user}
-          />
-        <p className="app-intro">
-          To get started, edit <code>src/App.js</code> and save to reload.
-        </p>
+        />
+        <h3>Notes</h3>
+        <div className="app-intro">
+          <ul>
+            {this.state.notes && this.state.notes.map(note => {
+              return (
+                <li key={note._id}>
+                  {note.title}
+                  {note.text}
+                </li>
+              );
+            })}
+          </ul>
+        </div>
       </div>
     );
   }

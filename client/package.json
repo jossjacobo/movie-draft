@@ -1,0 +1,28 @@
+{
+  "name": "movie-draft",
+  "version": "0.1.0",
+  "private": true,
+  "proxy": "http://localhost:3001",
+  "scripts": {
+    "start": "react-scripts start",
+    "styles": "stylus -u autoprefixer-stylus ./src/css/style.styl -o ./src/css/style.css",
+    "styles:watch": "stylus -u autoprefixer-stylus -w ./src/css/style.styl -o ./src/css/style.css",
+    "watch": "concurrently --name 'webpack, stylus' --prefix name 'npm run start' 'npm run styles:watch'",
+    "build": "react-scripts build",
+    "test": "react-scripts test --env=jsdom",
+    "eject": "react-scripts eject"
+  },
+  "dependencies": {
+    "dotenv": "^5.0.1",
+    "history": "4.2.0",
+    "re-base": "2.2.0",
+    "react": "^16.1.1",
+    "react-dom": "^16.1.1",
+    "react-scripts": "1.0.17"
+  },
+  "devDependencies": {
+    "autoprefixer-stylus": "0.10.0",
+    "concurrently": "3.0.0",
+    "stylus": "0.54.5"
+  }
+}
