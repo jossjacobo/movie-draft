@@ -1,4 +1,6 @@
 require('dotenv').config();
+require('es6-promise').polyfill();
+require('isomorphic-fetch');
 
 var express = require('express');
 var path = require('path');
@@ -8,6 +10,7 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
 var MongoClient = require('mongodb').MongoClient;
+var mongoose = require('./database');
 var dbConfig = require('./config/db');
 
 var routes = require('./routes');

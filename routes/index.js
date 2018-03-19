@@ -1,11 +1,9 @@
 var express = require('express');
 var router = express.Router();
 var notesRoutes = require('./notes');
+var configRoute = require('./config').routes;
 
 module.exports = function (app, db) {
-  app.get("/", (req, res) => {
-    res.send("/");
-  });
-
   notesRoutes(app, db);
+  configRoute(app, db);
 };
