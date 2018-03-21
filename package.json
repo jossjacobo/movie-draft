@@ -12,6 +12,7 @@
     "heroku-postbuild": "cd client && npm install && npm run build"
   },
   "dependencies": {
+    "agenda": "^1.0.3",
     "body-parser": "~1.18.2",
     "cookie-parser": "~1.4.3",
     "debug": "~2.6.9",
@@ -20,14 +21,14 @@
     "express": "~4.15.5",
     "isomorphic-fetch": "^2.2.1",
     "jade": "~1.11.0",
-    "mongodb": "^3.0.4",
     "mongoose": "^5.0.10",
     "morgan": "~1.9.0",
-    "serve-favicon": "~2.4.5"
+    "serve-favicon": "~2.4.5",
+    "underscore": "^1.8.3"
   },
   "devDependencies": {
-    "nodemon": "^1.17.1",
-    "concurrently": "3.0.0"
+    "concurrently": "3.0.0",
+    "nodemon": "^1.17.1"
   },
   "engines": {
     "node": "8.9.4"

@@ -14,6 +14,6 @@ var ConfigSchema = mongoose.Schema({
   change_keys: [String]
 });
 
-var Config = mongoose.model('Config', ConfigSchema);
+var Config = mongoose.model('config', ConfigSchema);
 
 module.exports = Config;

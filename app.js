@@ -9,11 +9,11 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
-var MongoClient = require('mongodb').MongoClient;
 var mongoose = require('./database');
 var dbConfig = require('./config/db');
 
 var routes = require('./routes');
+var agenda = require('./agenda');
 
 var app = express();
 
@@ -30,23 +30,21 @@ app.use(cookieParser());
 
 app.use(express.static(path.join(__dirname, 'public')));
 
-MongoClient.connect(dbConfig.url, (err, database) => {
-  if (err) return console.log(err);
+routes(app);
 
-  const db = database.db(process.env.DB_NAME);
-  routes(app, db);
+// Serve static files from React App
+app.use(express.static(path.join(__dirname, 'client/build')));
 
-  // Serve static files from React App
-  app.use(express.static(path.join(__dirname, 'client/build')));
-
-  // The catchall handler: for any requests that don't match one above,
-  // send back the React's index.html file.
-  app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname + '/client/build/index.html'));
-  });
+// The catchall handler: for any requests that don't match one above,
+// send back the React's index.html file.
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname + '/client/build/index.html'));
 });
 
-
+// Start all of the reoccurring jobs (i.e. fetching movies and updating it's details)
+agenda.on('ready', () => {
+  agenda.start();
+});
 
 // TODO uncomment once I figure out how to send traffic back from react app to express for /api/*
 // catch 404 and forward to error handler
