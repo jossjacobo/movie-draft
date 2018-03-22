@@ -1,0 +1,53 @@
+{
+  "name": "movie draft",
+  "repository": "https://github.com/jossjacobo/movie-draft",
+  "success_url": "/",
+  "buildpacks": [
+    {
+      "url": "heroku/nodejs"
+    }
+  ],
+  "addons": [
+    {
+      "plan": "papertrail:choklad"
+    }
+  ],
+  "env": {
+    "ALLOWED_IPS": {
+      "required": false
+    },
+    "BUGSNAG_CLIENT_KEY": {
+      "required": true
+    },
+    "DB_USER": {
+      "required": true
+    },
+    "DB_PASSWORD": {
+      "required": true
+    },
+    "DB_SUB_DOMAIN": {
+      "required": true
+    },
+    "DB_PORT": {
+      "required": true
+    },
+    "DB_NAME": {
+      "required": true
+    },
+    "TMDB_API_KEY": {
+      "required": true
+    },
+    "UPDATE_TMDB_CONFIG_INTERVAL": {
+      "required": true
+    },
+    "UPDATE_UPCOMING_MOVIES_INTERVAL": {
+      "required": true
+    },
+    "UPDATE_MOVIE_DETAILS_INTERVAL": {
+      "required": true
+    },
+    "FLAG_MOVIES_WITH_PENDING_CHANGES_INTERVAL": {
+      "required": true
+    }
+  }
+}

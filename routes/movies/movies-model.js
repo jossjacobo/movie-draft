@@ -8,6 +8,7 @@ var MoviesSchema = mongoose.Schema({
   },
   adult: Boolean,
   backdrop_path: String,
+  backdrop: String,
   budget: Number,
   genres: [{
     id: Number,
@@ -25,10 +26,12 @@ var MoviesSchema = mongoose.Schema({
   overview: String,
   popularity: Number,
   poster_path: String,
+  poster: String,
   production_companies: [{
     name: String,
     id: Number,
     logo_path: String,
+    logo: String,
     origin_country: String
   }],
   production_countries: [{
