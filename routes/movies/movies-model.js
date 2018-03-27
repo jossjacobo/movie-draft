@@ -20,6 +20,7 @@ var MoviesSchema = mongoose.Schema({
     require: true,
     unique: true
   },
+  idMojo: String,
   imdb_id: String,
   original_language: String,
   original_title: String,
@@ -40,6 +41,7 @@ var MoviesSchema = mongoose.Schema({
   }],
   release_date: Date,
   revenue: Number,
+  revenueMojo: Number,
   runtime: Number,
   spoken_languages: [{
     iso_639_1: String,

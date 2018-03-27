@@ -1,7 +1,10 @@
+// @ts-check
+
 var _ = require('underscore');
 var tmdb = require('../tmdb');
 var Movies = require('./movies-model');
 var configController = require('../config/config-controller');
+var cheerio = require('cheerio');
 
 function getUpcomingMovies(page = 1) {
   return fetch(`${tmdb.host}/movie/upcoming?api_key=${tmdb.api_key}&page=${page}`);
@@ -18,6 +21,7 @@ function getMovieChanges(page = 1) {
 
 function fillArray(page) {
   var pages = [];
+  var i;
   for (i = 1; i <= page; i++) {
     pages.push(i);
   }
@@ -48,6 +52,52 @@ function buildImageUrls(movies, config) {
   return movies;
 }
 
+/**
+ * Find Mojo ID crawls the boxofficemojo.com website for the mojoId.
+ * Currently the approach is to use it's built in search and grab the 
+ * first result (sorted by desc. release date)
+ * 
+ * Method will return an promise with the updated movie object
+ * 
+ * @param {*} movie 
+ */
+async function findMojoId(movie) {
+  if (movie.idMojo) return movie;
+
+  var $ = await fetch(`http://www.boxofficemojo.com/search/?q=${movie.title}`)
+    .then(req => req.text())
+    .then(html => cheerio.load(html));
+
+  var dates = [];
+  $('[href^="/schedule/?view"]').each(function (i, elem) {
+    dates.push($(this).text());
+  });
+
+  if (dates.length > 0) {
+    movie.idMojo = $('td a[href^="/movies/?id="]')
+      .attr('href')
+      .replace('/movies/?id=', '');
+  }
+  return movie;
+}
+
+function findMojoRevenue(movie) {
+  if (!movie || !movie.idMojo) {
+    return movie;
+  }
+
+  return fetch(`http://www.boxofficemojo.com/movies/?id=${movie.idMojo}`)
+    .then(req => req.text())
+    .then(html => cheerio.load(html))
+    .then($ => {
+      var revenue = $('.mp_box_tab:contains("Lifetime") + *').find('td b').last().text();
+      if (revenue) {
+        movie.revenueMojo = revenue.replace(/\D/g, '');
+      }
+      return movie;
+    });
+}
+
 module.exports.fetchAndUpcomingMoviesBasicInfo = function () {
   return getUpcomingMovies() // initial call just to get the number of pages
     .then(response => response.json())
@@ -76,7 +126,7 @@ module.exports.fetchAndUpcomingMoviesBasicInfo = function () {
     });
 }
 
-module.exports.fetchAndUpdateMovieDetails = async function (limit = 40) {
+module.exports.fetchAndUpdateMovieDetails = async function (limit = 20) {
   var config = await configController.getConfig();
   return Movies.find({ detailsFetched: false })
     .limit(limit)
@@ -105,7 +155,26 @@ module.exports.fetchAndUpdateMovieDetails = async function (limit = 40) {
         return Movies.findOneAndUpdate({ id: movie.id }, movie, { new: true, upsert: true, setDefaultsOnInsert: true });
       });
       return Promise.all(updateMoviePromises);
-    });
+    })
+    .then(movies => {
+      var idMojoPromises = movies.map(movie => {
+        return findMojoId(movie);
+      });
+      return Promise.all(idMojoPromises);
+    })
+
+    .then(movies => {
+      var revenueMojoPromises = movies.map(movie => {
+        return findMojoRevenue(movie);
+      })
+      return Promise.all(revenueMojoPromises);
+    })
+    .then(movies => {
+      var updateMoviePromises = movies.map(movie => {
+        return Movies.findOneAndUpdate({ id: movie.id }, movie, { new: true, upsert: true, setDefaultsOnInsert: true });
+      });
+      return Promise.all(updateMoviePromises);
+    })
 }
 
 module.exports.fetchAndFlagMoviesWithPendingChanges = async function () {
@@ -138,7 +207,7 @@ module.exports.fetchAndFlagMoviesWithPendingChanges = async function () {
     })
     .then(ids => {
       return ids.reduce((accumulator, current) => {
-        if (movies.find((movie) => movie.id == current.id)) {
+        if (current && movies.find((movie) => movie.id == current.id)) {
           accumulator.push(current.id);
         }
         return accumulator;
